@@ -3,178 +3,294 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>3D Happy Birthday monohorin</title>
-    
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/0.158.0/three.min.js"></script>
+    <title>Happy Birthday monohorin</title>
 
     <style>
-        body { 
-            margin: 0; 
-            overflow: hidden; 
-            background-color: #333; 
-            font-family: 'Arial', sans-serif;
-        }
-        canvas { 
-            display: block; 
-            width: 100vw; 
-            height: 100vh;
-        }
-        #ui-container {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+        /* --- General and UI Styles --- */
+        body {
+            background-color: #FEDFED;
             display: flex;
             flex-direction: column;
+            justify-content: center;
             align-items: center;
-            justify-content: space-between;
-            padding: 20px 0;
-            box-sizing: border-box;
-            pointer-events: none; /* Allows clicks to pass through to the canvas */
+            min-height: 100vh;
+            margin: 0;
+            overflow: hidden;
+            font-family: Arial, sans-serif;
         }
+
         #title-message {
-            color: #FFD700; /* Gold */
-            font-size: 3em;
-            text-shadow: 0 0 10px rgba(0,0,0,0.8);
-            pointer-events: auto;
+            font-family: cursive;
+            color: #8C0303;
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 2.5em; /* Slightly larger text */
         }
-        .controls {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
+
+        .controls-overlay {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
             padding: 15px;
             background-color: rgba(0, 0, 0, 0.7);
-            border-radius: 8px;
-            pointer-events: auto;
             color: white;
-            font-size: 1.1em;
+            border-radius: 8px;
+            z-index: 100;
+            text-align: center;
         }
-        button, input[type="file"] {
+
+        .controls-overlay h3 {
+            margin-top: 0;
+            margin-bottom: 5px;
+        }
+
+        #startButton {
             padding: 10px 15px;
+            background-color: #4CAF50;
+            color: white;
             border: none;
             border-radius: 5px;
             cursor: pointer;
-            background-color: #007bff;
-            color: white;
-            transition: background-color 0.2s;
+            margin-bottom: 10px;
         }
-        button:hover { background-color: #0056b3; }
+
         #blow-status {
-            color: #ff0000;
+            color: #FFD700;
             font-weight: bold;
+            font-size: 1.2em;
+            margin-top: 10px;
+        }
+        
+        input[type="file"] {
+            display: block;
+            margin: 5px auto;
+            font-size: 0.9em;
+            color: white;
+            background-color: transparent;
+            border: 1px solid white;
+            padding: 5px;
+            border-radius: 3px;
+        }
+
+        /* --- Cake and Candle Styles (Adapted from source link) --- */
+        
+        .cake {
+            position: relative;
+            cursor: pointer;
+            transform: scale(1.5); /* MAKE THE CAKE LARGER */
+        }
+
+        /* Plate */
+        .plate {
+            width: 300px;
+            height: 10px;
+            background-color: #eee;
+            border-radius: 50%;
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            bottom: -5px;
+            box-shadow: 0 5px 0px #ccc;
+        }
+
+        /* Cake Layers */
+        .layer {
+            width: 200px;
+            height: 50px;
+            position: relative;
+            background-color: #FCD7BA; /* Vanilla color */
+            border-radius: 5px;
+            left: 50%;
+            transform: translateX(-50%);
+            box-shadow: 0 2px 0px #F5C5A1, 0 4px 0px #EDB486, 0 6px 0px #E5A36B, 0 8px 0px #DE9251;
+        }
+
+        .layer-bottom { bottom: 60px; }
+        .layer-middle { bottom: 110px; }
+        .layer-top { bottom: 160px; }
+
+        /* Icing */
+        .icing {
+            width: 200px;
+            height: 10px;
+            background-color: #FFDAB9; /* Icing color */
+            border-radius: 50%;
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            bottom: 170px;
+            box-shadow: 0 2px 0px #FCD7BA;
+        }
+
+        /* Drips */
+        .drip1, .drip2, .drip3 {
+            position: absolute;
+            width: 10px;
+            height: 20px;
+            background-color: #FCD7BA;
+            border-radius: 0 0 50% 50%;
+            bottom: 150px;
+        }
+        .drip1 { left: 55px; }
+        .drip2 { left: 95px; }
+        .drip3 { left: 135px; }
+
+        /* Candle Counter */
+        .candle-count-display {
+            position: absolute;
+            bottom: 200px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #8C0303;
+            font-weight: bold;
+            z-index: 10;
+        }
+
+        /* Candle and Flame */
+        .candle {
+            position: absolute;
+            width: 5px;
+            height: 30px;
+            background-color: #FF0000;
+            border-radius: 2px;
+            z-index: 5;
+            bottom: 180px;
+            /* transform will be set by JS on click */
+        }
+        
+        .flame {
+            position: absolute;
+            top: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 5px;
+            height: 10px;
+            background: radial-gradient(circle at 50% 0, yellow, orange, transparent 70%);
+            border-radius: 50% 50% 20% 20%;
+            box-shadow: 0 0 5px 2px yellow;
+            animation: flicker 0.2s infinite alternate;
+        }
+        
+        /* State when candle is blown out */
+        .candle.out .flame {
             display: none;
         }
+
+        @keyframes flicker {
+            from { opacity: 1; box-shadow: 0 0 5px 2px orange; }
+            to { opacity: 0.8; box-shadow: 0 0 4px 1px yellow; }
+        }
+
     </style>
 </head>
 <body>
-    <canvas id="threeJsCanvas"></canvas>
     
-    <div id="ui-container">
-        <h1 id="title-message">Happy Birthday monohorin</h1>
-        
-        <div class="controls">
-            <p id="mic-status">Click START to enable microphone...</p>
-            <p id="blow-status">BLOW NOW!</p>
-            <button id="startButton">START Cake Interaction (Requires Mic Access)</button>
-            <hr style="width:100%; border-color: rgba(255,255,255,0.2);">
-            <label for="audioUpload">Voice Message:</label>
-            <input type="file" id="audioUpload" accept="audio/*">
-            <p id="audio-status" style="font-size:0.9em; margin: 0;">No audio uploaded.</p>
+    <h1 id="title-message">Happy Birthday monohorin</h1>
+    
+    <div id="cake-container">
+        <div class="cake">
+            <div class="plate"></div>
+            <div class="layer layer-bottom"></div>
+            <div class="layer layer-middle"></div>
+            <div class="layer layer-top"></div>
+            <div class="icing"></div>
+            <div class="drip drip1"></div>
+            <div class="drip drip2"></div>
+            <div class="drip drip3"></div>
+            <div class="candle-count-display">Candles: <span id="candleCount">0</span></div>
         </div>
+    </div>
+
+    <div class="controls-overlay">
+        <p id="mic-status">Click START to begin...</p>
+        <button id="startButton">START Interaction (Allow Mic)</button>
+        <p id="blow-status" style="display:none;">BLOW NOW!</p>
+        
+        <hr style="width:100%; border-color: rgba(255,255,255,0.2);">
+        
+        <h3>Voice Message</h3>
+        <input type="file" id="audioUpload" accept="audio/*">
+        <p id="audio-status" style="font-size:0.9em; margin: 0;">No audio uploaded.</p>
     </div>
     
     <audio id="birthdayMessageAudio"></audio>
-    <audio id="backgroundMusic" src="[path/to/your/music.mp3]" loop></audio> <script>
-        // --- THREE.JS SETUP ---
-        const scene = new THREE.Scene();
-        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-        const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('threeJsCanvas'), antialias: true });
-        
-        renderer.setSize(window.innerWidth, window.innerHeight);
-        camera.position.set(0, 1.5, 4); 
-        camera.lookAt(0, 1, 0);
+    <audio id="backgroundMusic" src="[path/to/your/music.mp3]" loop autoplay></audio> 
+    <script>
+        // --- DOM Elements and Core Variables ---
+        const cake = document.querySelector(".cake");
+        const candleCountDisplay = document.getElementById("candleCount");
+        const backgroundMusic = document.getElementById("backgroundMusic");
+        const startButton = document.getElementById("startButton");
+        const micStatus = document.getElementById("mic-status");
+        const blowStatus = document.getElementById("blow-status");
+        const audioUpload = document.getElementById("audioUpload");
+        const audioStatus = document.getElementById("audio-status");
+        const birthdayMessageAudio = document.getElementById("birthdayMessageAudio");
 
-        // Lighting
-        const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
-        scene.add(ambientLight);
-        const pointLight = new THREE.PointLight(0xffffff, 100);
-        pointLight.position.set(0, 5, 0);
-        scene.add(pointLight);
-
-        // --- 3D CAKE AND CANDLE CREATION (Simplified) ---
-        const flames = [];
-        const cakeGroup = new THREE.Group();
-
-        // 1. Create Cake (Slightly larger size)
-        const cakeHeight = 1.2;
-        const cakeRadius = 1.5;
-        const cakeGeometry = new THREE.CylinderGeometry(cakeRadius, cakeRadius * 1.1, cakeHeight, 32);
-        const cakeMaterial = new THREE.MeshStandardMaterial({ color: 0xFFC0CB }); // Pink cake
-        const cake = new THREE.Mesh(cakeGeometry, cakeMaterial);
-        cake.position.y = cakeHeight / 2;
-        cakeGroup.add(cake);
-
-        // 2. Icing (White)
-        const icingGeometry = new THREE.CylinderGeometry(cakeRadius * 1.05, cakeRadius * 1.1, 0.1, 32);
-        const icingMaterial = new THREE.MeshStandardMaterial({ color: 0xFFFFFF });
-        const icing = new THREE.Mesh(icingGeometry, icingMaterial);
-        icing.position.y = cakeHeight + 0.05;
-        cakeGroup.add(icing);
-
-        // 3. Candle and Flame (Single for simplicity, you can copy/paste/reposition this for more)
-        const candleY = cakeHeight + 0.1 + 0.4;
-        const candleGeometry = new THREE.CylinderGeometry(0.05, 0.05, 0.8, 8);
-        const candleMaterial = new THREE.MeshStandardMaterial({ color: 0xFF0000 });
-        const candle = new THREE.Mesh(candleGeometry, candleMaterial);
-        candle.position.y = candleY;
-        cakeGroup.add(candle);
-
-        // Flame (Point Light + small geometry)
-        const flameLight = new THREE.PointLight(0xFFA500, 50, 2);
-        flameLight.position.set(0, candleY + 0.4, 0);
-        
-        const flameGeometry = new THREE.SphereGeometry(0.04, 16, 8);
-        const flameMaterial = new THREE.MeshBasicMaterial({ color: 0xFFFF00, transparent: true, opacity: 0.9 });
-        const flame = new THREE.Mesh(flameGeometry, flameMaterial);
-        flame.position.copy(flameLight.position);
-
-        cakeGroup.add(flameLight);
-        cakeGroup.add(flame);
-        flames.push({ light: flameLight, mesh: flame, active: true });
-        scene.add(cakeGroup);
-
-        // --- ANIMATION LOOP ---
-        function animate() {
-            requestAnimationFrame(animate);
-            // Simple rotation to show it's 3D
-            cakeGroup.rotation.y += 0.005;
-            renderer.render(scene, camera);
-        }
-        animate();
-        
-        window.addEventListener('resize', () => {
-            camera.aspect = window.innerWidth / window.innerHeight;
-            camera.updateProjectionMatrix();
-            renderer.setSize(window.innerWidth, window.innerHeight);
-        });
-        
-        // --- AUDIO / MICROPHONE LOGIC ---
-        const audioUpload = document.getElementById('audioUpload');
-        const audioStatus = document.getElementById('audio-status');
-        const birthdayMessageAudio = document.getElementById('birthdayMessageAudio');
-        const backgroundMusic = document.getElementById('backgroundMusic');
-        const micStatus = document.getElementById('mic-status');
-        const startButton = document.getElementById('startButton');
-        const blowStatus = document.getElementById('blow-status');
-
+        let candles = [];
         let audioContext;
         let analyser;
-        const BLOW_THRESHOLD = 150; // Threshold for blow detection (Adjust based on mic sensitivity)
-        let isBlowing = false;
-        let allCandlesOut = false;
+        let microphone;
 
-        // File upload handling
+        const BLOW_THRESHOLD = 150; // Sensitivity for blow detection (Adjust this!)
+        let isBlowing = false;
+
+        // --- Functions ---
+        
+        function updateCandleCount() {
+            const activeCandles = candles.filter((candle) => !candle.classList.contains("out")).length;
+            candleCountDisplay.textContent = activeCandles;
+
+            if (activeCandles === 0 && candles.length > 0) {
+                handleBlowOut();
+            }
+        }
+
+        function handleBlowOut() {
+            // 1. Stop background music
+            backgroundMusic.pause();
+            
+            // 2. Play recorded message
+            if (birthdayMessageAudio.src) {
+                birthdayMessageAudio.play();
+            }
+            
+            // 3. Update UI
+            micStatus.textContent = "WISH GRANTED! Message Playing... 🎉";
+            blowStatus.style.display = 'block';
+            blowStatus.textContent = 'HAPPY BIRTHDAY!';
+        }
+
+        // --- Event Listeners ---
+        
+        // 1. Add Candle (Click on Cake)
+        cake.addEventListener("click", function (e) {
+            if (!audioContext) {
+                alert("Please click 'START Interaction' first to enable microphone.");
+                return;
+            }
+            
+            const rect = cake.getBoundingClientRect();
+            // Calculate relative position within the cake div
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+
+            const candle = document.createElement("div");
+            candle.className = "candle";
+            // Adjust position to place the candle on the top layer
+            candle.style.left = x + "px";
+            candle.style.top = y + 70 + "px"; // 70px is an offset to place it higher
+
+            const flame = document.createElement("div");
+            flame.className = "flame";
+            candle.appendChild(flame);
+
+            cake.appendChild(candle);
+            candles.push(candle);
+            updateCandleCount();
+        });
+
+        // 2. Handle File Upload
         audioUpload.addEventListener('change', (event) => {
             const file = event.target.files[0];
             if (file) {
@@ -186,11 +302,36 @@
             }
         });
 
-        // Main function to detect blow
-        function detectBlow() {
-            if (allCandlesOut || !analyser) return;
+        // 3. Main Microphone Setup
+        startButton.addEventListener('click', async () => {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                analyser = audioContext.createAnalyser();
+                const microphoneSource = audioContext.createMediaStreamSource(stream);
+                microphoneSource.connect(analyser);
 
-            requestAnimationFrame(detectBlow);
+                analyser.fftSize = 256; 
+                
+                micStatus.textContent = "Microphone ON. Click cake to add candles!";
+                startButton.style.display = 'none';
+                backgroundMusic.play().catch(e => console.log("Music auto-play blocked."));
+                detectBlow(); // Start the blow detection loop
+            } catch (err) {
+                micStatus.textContent = "Mic access denied. Cannot blow out candles.";
+                console.error("Error accessing microphone:", err);
+            }
+        });
+
+
+        // 4. Blow Detection Loop
+        function detectBlow() {
+            if (!analyser) {
+                requestAnimationFrame(detectBlow);
+                return;
+            }
+            
+            requestAnimationFrame(detectBlow); 
 
             const volumeData = new Uint8Array(analyser.frequencyBinCount);
             analyser.getByteFrequencyData(volumeData);
@@ -203,64 +344,24 @@
             if (averageVolume > BLOW_THRESHOLD && !isBlowing) {
                 isBlowing = true;
                 blowStatus.style.display = 'block';
-                blowStatus.textContent = 'BLOW DETECTED!';
                 
-                extinguishCandle();
+                // Find the first active candle (not 'out')
+                const activeCandle = candles.find((c) => !c.classList.contains("out"));
+                if (activeCandle) {
+                    activeCandle.classList.add("out");
+                    updateCandleCount(); // Check if all are out
+                }
                 
+                // Cooldown period and UI reset
                 setTimeout(() => { 
                     isBlowing = false; 
-                    blowStatus.textContent = 'BLOW NOW!';
-                    if (!allCandlesOut) {
-                         // Hide status if not done
-                         blowStatus.style.display = 'none'; 
+                    if (candles.filter(c => !c.classList.contains("out")).length > 0) {
+                        // Only hide blow status if candles are left to blow
+                        blowStatus.style.display = 'none'; 
                     }
                 }, 1000); 
             }
         }
-
-        // Extinguish logic
-        function extinguishCandle() {
-            const activeFlame = flames.find(f => f.active);
-
-            if (activeFlame) {
-                // Extinguish the flame in 3D
-                activeFlame.light.intensity = 0; // Turn off light
-                activeFlame.mesh.visible = false;  // Hide mesh
-                activeFlame.active = false;
-                
-                // Since we only made one candle, we check immediately
-                allCandlesOut = true; 
-                blowStatus.style.display = 'block';
-                blowStatus.textContent = 'WISH GRANTED!';
-                
-                // Play recorded message
-                backgroundMusic.pause();
-                if (birthdayMessageAudio.src) {
-                    birthdayMessageAudio.play();
-                }
-            }
-        }
-        
-        // Start button handler
-        startButton.addEventListener('click', async () => {
-             // 1. Request microphone access
-            try {
-                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-                audioContext = new (window.AudioContext || window.webkitAudioContext)();
-                analyser = audioContext.createAnalyser();
-                const microphone = audioContext.createMediaStreamSource(stream);
-                microphone.connect(analyser);
-
-                micStatus.textContent = "Microphone ON. READY!";
-                startButton.style.display = 'none';
-                blowStatus.style.display = 'block';
-                backgroundMusic.play().catch(e => console.log("Background music blocked by browser."));
-                detectBlow(); // Start the blow detection loop
-            } catch (err) {
-                micStatus.textContent = "Mic access denied. Cannot blow out candles.";
-                console.error("Error accessing microphone:", err);
-            }
-        });
     </script>
 </body>
 </html>
