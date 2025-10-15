@@ -1,188 +1,172 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Happy Birthday Monohorin 🎂</title>
-<style>
-  body {
-    margin: 0;
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    font-family: "Comic Sans MS", cursive;
-    background: linear-gradient(to right, #ffecd2, #fcb69f);
-    overflow: hidden;
-  }
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title> Happy Birthday 🎂</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400..700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      #mainTitle {
+        font-size: 32px;
+        font-family: 'Pixelify Sans', sans-serif;
+        margin-bottom: 8px;
+      }
 
-  h1 {
-    color: #fff;
-    font-size: 3em;
-    text-shadow: 2px 2px 8px rgba(0,0,0,0.5);
-    margin-bottom: 30px;
-  }
-
-  .cake-container {
-    position: relative;
-    width: 250px;
-  }
-
-  /* Cake base */
-  .cake {
-    position: relative;
-    width: 250px;
-    height: 150px;
-    background: linear-gradient(to bottom, #ff6f91, #ff3d6f);
-    border-radius: 0 0 40px 40px;
-    box-shadow: 0 5px 20px rgba(0,0,0,0.2);
-  }
-
-  /* Icing */
-  .icing {
-    position: absolute;
-    top: 0;
-    width: 100%;
-    height: 50px;
-    background: linear-gradient(to bottom, #fff0f5, #ffdee8);
-    border-radius: 50% 50% 0 0;
-    box-shadow: inset 0 -5px 15px rgba(255,255,255,0.5);
-  }
-
-  /* Candle */
-  .candle {
-    position: absolute;
-    top: -70px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 20px;
-    height: 70px;
-    background: repeating-linear-gradient(
-      45deg,
-      #ffdc73,
-      #ffdc73 5px,
-      #ff9f7f 5px,
-      #ff9f7f 10px
-    );
-    border-radius: 5px;
-  }
-
-  /* Flame */
-  .flame {
-    position: absolute;
-    top: -25px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 20px;
-    height: 25px;
-    background: radial-gradient(circle at 50% 50%, #ffeb3b, #ff9800);
-    border-radius: 50%;
-    filter: drop-shadow(0 0 5px #ffeb3b);
-    animation: flicker 0.2s infinite;
-  }
-
-  @keyframes flicker {
-    0%, 100% { transform: translateX(-50%) scale(1); }
-    50% { transform: translateX(-50%) scale(1.2) translateY(-3px); }
-  }
-
-  /* Age number */
-  .number {
-    position: absolute;
-    top: -100px;
-    left: 50%;
-    transform: translateX(-50%);
-    color: #fff;
-    font-size: 2em;
-    text-shadow: 1px 1px 4px rgba(0,0,0,0.6);
-  }
-
-  /* Button */
-  button {
-    margin-top: 30px;
-    background: #ff6699;
-    color: #fff;
-    border: none;
-    padding: 12px 28px;
-    font-size: 1.1em;
-    border-radius: 30px;
-    cursor: pointer;
-    transition: 0.3s;
-  }
-
-  button:hover {
-    background: #ff3366;
-  }
-
-  /* Confetti */
-  .confetti {
-    position: absolute;
-    width: 8px;
-    height: 8px;
-    background-color: red;
-    opacity: 0;
-    pointer-events: none;
-  }
-
-</style>
-</head>
-<body>
-<h1>Happy Birthday Monohorin 🎉</h1>
-
-<div class="cake-container">
-  <div class="cake">
-    <div class="icing"></div>
-    <div class="candle" id="candle">
-      <div class="flame" id="flame"></div>
-      <div class="number" id="number">31</div>
+      #subTitle {
+        font-size: 18px;
+        font-family: 'Pixelify Sans', sans-serif;
+        color: #555;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div id="birthdayText"></div>
+      <div class="cake-container">
+        <div class="cake" id="cake"></div>
+      </div>
     </div>
-  </div>
-</div>
 
-<button onclick="blowCandle()">Blow Candle 🎂</button>
+    <script>
+      // Read URL params
+      const params = new URLSearchParams(window.location.search);
+      const name = params.get("name") || "Friend";
+      let candleCount = parseInt(params.get("candles")) || 4;
+      candleCount = Math.min(Math.max(candleCount, 1), 30);
 
-<audio id="bgMusic" src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_2b758f84cb.mp3?filename=happy-birthday-piano-122153.mp3" autoplay loop></audio>
-<audio id="voiceMsg" src="https://cdn.pixabay.com/download/audio/2021/08/04/audio_b3f3d8b1fd.mp3?filename=soft-wish-11017.mp3"></audio>
+      const birthdayText = document.getElementById("birthdayText");
+      birthdayText.innerHTML = `
+        <div id="mainTitle">Happy Birthday, ${name}!</div>
+        <div id="subTitle">Make a wish and blow candles.</div>
+      `;
 
-<script>
-function blowCandle() {
-  const flame = document.getElementById('flame');
-  flame.style.display = 'none';
-  const btn = document.querySelector('button');
-  btn.textContent = '🎉 Candle Blown! 🎉';
-  btn.disabled = true;
+      const cake = document.getElementById("cake");
 
-  const voiceMsg = document.getElementById('voiceMsg');
-  setTimeout(() => {
-    voiceMsg.play();
-    launchConfetti();
-  }, 500);
-}
+      const colors = [
+        "green-candle",
+        "purple-candle",
+        "blue-candle",
+        "yellow-candle",
+      ];
+      const CAKE_VISUAL_WIDTH = 35;
 
-// Confetti function
-function launchConfetti() {
-  for (let i = 0; i < 100; i++) {
-    const confetti = document.createElement('div');
-    confetti.classList.add('confetti');
-    confetti.style.backgroundColor = `hsl(${Math.random()*360}, 100%, 50%)`;
-    confetti.style.left = Math.random()*window.innerWidth + 'px';
-    confetti.style.top = '-10px';
-    document.body.appendChild(confetti);
-    
-    confetti.style.opacity = 1;
-    const fall = confetti.animate([
-      { transform: `translateY(0px) rotate(0deg)` },
-      { transform: `translateY(${window.innerHeight + 50}px) rotate(${Math.random()*720}deg)` }
-    ], {
-      duration: 3000 + Math.random()*2000,
-      iterations: 1,
-      easing: 'ease-out'
-    });
-    
-    fall.onfinish = () => confetti.remove();
-  }
-}
-</script>
-</body>
+      function createCandles(count) {
+        cake.innerHTML = "";
+        const CANDLE_VISUAL_WIDTH = 2;
+        const availableWidth = CAKE_VISUAL_WIDTH;
+        const candlesPerRow = 6;
+        const rowCount = Math.ceil(count / candlesPerRow);
+        const shiftAmount = 4;
+
+        for (let i = 0; i < count; i++) {
+          const candle = document.createElement("div");
+          candle.classList.add("candle");
+          const colorClass = colors[Math.floor(Math.random() * colors.length)];
+          candle.classList.add(colorClass);
+
+          const row = Math.floor(i / candlesPerRow);
+          const col = i % candlesPerRow;
+          const totalCandlesInRow = Math.min(
+            candlesPerRow,
+            count - row * candlesPerRow
+          );
+          const rowSpacing = availableWidth / (totalCandlesInRow + 1);
+
+          const leftBase = rowSpacing * (col + 1) - CANDLE_VISUAL_WIDTH / 2 + 5;
+          const rowShift = row % 2 === 0 ? 0 : shiftAmount;
+
+          candle.style.position = "absolute";
+          candle.style.top = `${10 + row * 3}px`;
+          candle.style.left = `${leftBase - rowShift + 4}px`;
+
+          cake.appendChild(candle);
+        }
+      }
+
+      createCandles(candleCount);
+
+      // === Microphone / Blow Detection ===
+      async function startMicDetection() {
+        try {
+          const stream = await navigator.mediaDevices.getUserMedia({
+            audio: true,
+          });
+          const audioContext = new (window.AudioContext ||
+            window.webkitAudioContext)();
+          const source = audioContext.createMediaStreamSource(stream);
+          const analyser = audioContext.createAnalyser();
+          analyser.fftSize = 512;
+
+          source.connect(analyser);
+
+          const dataArray = new Uint8Array(analyser.frequencyBinCount);
+
+          let blown = false;
+
+          function detectBlow() {
+            analyser.getByteFrequencyData(dataArray);
+
+            let highFreqSum = 0;
+            let lowFreqSum = 0;
+
+            const midpoint = dataArray.length / 2;
+
+            for (let i = 0; i < dataArray.length; i++) {
+              if (i < midpoint) {
+                lowFreqSum += dataArray[i];
+              } else {
+                highFreqSum += dataArray[i];
+              }
+            }
+
+            const highAvg = highFreqSum / (dataArray.length / 2);
+            const lowAvg = lowFreqSum / (dataArray.length / 2);
+
+            const ratio = highAvg / (lowAvg + 1);
+
+            const BLOW_RATIO_THRESHOLD = 0.5;
+
+            if (ratio > BLOW_RATIO_THRESHOLD && !blown) {
+              blown = true;
+              blowOutCandles();
+            }
+
+            requestAnimationFrame(detectBlow);
+          }
+
+          detectBlow();
+        } catch (err) {
+          console.error("Mic access error:", err);
+        }
+      }
+
+      function blowOutCandles() {
+        const candles = document.querySelectorAll(".candle");
+        candles.forEach((candle) => {
+          const delay = Math.random() * 1000;
+          setTimeout(() => {
+            colors.forEach((color) => {
+              if (candle.classList.contains(color)) {
+                candle.classList.add("blown");
+              }
+            });
+          }, delay);
+        });
+
+        // Update subTitle after short delay
+        setTimeout(() => {
+          const subTitle = document.getElementById("subTitle");
+          subTitle.textContent = `Yayy! Wishing you the happiest birthday ever!! 🎉`;
+        }, 1200);
+      }
+
+      startMicDetection();
+    </script>
+  </body>
 </html>
