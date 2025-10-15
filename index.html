@@ -1,172 +1,266 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title> Happy Birthday 🎂</title>
-    <link rel="stylesheet" href="style.css" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400..700&display=swap"
-      rel="stylesheet"
-    />
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D Happy Birthday monohorin</title>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/0.158.0/three.min.js"></script>
+
     <style>
-      #mainTitle {
-        font-size: 32px;
-        font-family: 'Pixelify Sans', sans-serif;
-        margin-bottom: 8px;
-      }
-
-      #subTitle {
-        font-size: 18px;
-        font-family: 'Pixelify Sans', sans-serif;
-        color: #555;
-      }
+        body { 
+            margin: 0; 
+            overflow: hidden; 
+            background-color: #333; 
+            font-family: 'Arial', sans-serif;
+        }
+        canvas { 
+            display: block; 
+            width: 100vw; 
+            height: 100vh;
+        }
+        #ui-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            padding: 20px 0;
+            box-sizing: border-box;
+            pointer-events: none; /* Allows clicks to pass through to the canvas */
+        }
+        #title-message {
+            color: #FFD700; /* Gold */
+            font-size: 3em;
+            text-shadow: 0 0 10px rgba(0,0,0,0.8);
+            pointer-events: auto;
+        }
+        .controls {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            padding: 15px;
+            background-color: rgba(0, 0, 0, 0.7);
+            border-radius: 8px;
+            pointer-events: auto;
+            color: white;
+            font-size: 1.1em;
+        }
+        button, input[type="file"] {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            background-color: #007bff;
+            color: white;
+            transition: background-color 0.2s;
+        }
+        button:hover { background-color: #0056b3; }
+        #blow-status {
+            color: #ff0000;
+            font-weight: bold;
+            display: none;
+        }
     </style>
-  </head>
-  <body>
-    <div class="container">
-      <div id="birthdayText"></div>
-      <div class="cake-container">
-        <div class="cake" id="cake"></div>
-      </div>
+</head>
+<body>
+    <canvas id="threeJsCanvas"></canvas>
+    
+    <div id="ui-container">
+        <h1 id="title-message">Happy Birthday monohorin</h1>
+        
+        <div class="controls">
+            <p id="mic-status">Click START to enable microphone...</p>
+            <p id="blow-status">BLOW NOW!</p>
+            <button id="startButton">START Cake Interaction (Requires Mic Access)</button>
+            <hr style="width:100%; border-color: rgba(255,255,255,0.2);">
+            <label for="audioUpload">Voice Message:</label>
+            <input type="file" id="audioUpload" accept="audio/*">
+            <p id="audio-status" style="font-size:0.9em; margin: 0;">No audio uploaded.</p>
+        </div>
     </div>
+    
+    <audio id="birthdayMessageAudio"></audio>
+    <audio id="backgroundMusic" src="[path/to/your/music.mp3]" loop></audio> <script>
+        // --- THREE.JS SETUP ---
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('threeJsCanvas'), antialias: true });
+        
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        camera.position.set(0, 1.5, 4); 
+        camera.lookAt(0, 1, 0);
 
-    <script>
-      // Read URL params
-      const params = new URLSearchParams(window.location.search);
-      const name = params.get("name") || "Friend";
-      let candleCount = parseInt(params.get("candles")) || 4;
-      candleCount = Math.min(Math.max(candleCount, 1), 30);
+        // Lighting
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+        scene.add(ambientLight);
+        const pointLight = new THREE.PointLight(0xffffff, 100);
+        pointLight.position.set(0, 5, 0);
+        scene.add(pointLight);
 
-      const birthdayText = document.getElementById("birthdayText");
-      birthdayText.innerHTML = `
-        <div id="mainTitle">Happy Birthday, ${name}!</div>
-        <div id="subTitle">Make a wish and blow candles.</div>
-      `;
+        // --- 3D CAKE AND CANDLE CREATION (Simplified) ---
+        const flames = [];
+        const cakeGroup = new THREE.Group();
 
-      const cake = document.getElementById("cake");
+        // 1. Create Cake (Slightly larger size)
+        const cakeHeight = 1.2;
+        const cakeRadius = 1.5;
+        const cakeGeometry = new THREE.CylinderGeometry(cakeRadius, cakeRadius * 1.1, cakeHeight, 32);
+        const cakeMaterial = new THREE.MeshStandardMaterial({ color: 0xFFC0CB }); // Pink cake
+        const cake = new THREE.Mesh(cakeGeometry, cakeMaterial);
+        cake.position.y = cakeHeight / 2;
+        cakeGroup.add(cake);
 
-      const colors = [
-        "green-candle",
-        "purple-candle",
-        "blue-candle",
-        "yellow-candle",
-      ];
-      const CAKE_VISUAL_WIDTH = 35;
+        // 2. Icing (White)
+        const icingGeometry = new THREE.CylinderGeometry(cakeRadius * 1.05, cakeRadius * 1.1, 0.1, 32);
+        const icingMaterial = new THREE.MeshStandardMaterial({ color: 0xFFFFFF });
+        const icing = new THREE.Mesh(icingGeometry, icingMaterial);
+        icing.position.y = cakeHeight + 0.05;
+        cakeGroup.add(icing);
 
-      function createCandles(count) {
-        cake.innerHTML = "";
-        const CANDLE_VISUAL_WIDTH = 2;
-        const availableWidth = CAKE_VISUAL_WIDTH;
-        const candlesPerRow = 6;
-        const rowCount = Math.ceil(count / candlesPerRow);
-        const shiftAmount = 4;
+        // 3. Candle and Flame (Single for simplicity, you can copy/paste/reposition this for more)
+        const candleY = cakeHeight + 0.1 + 0.4;
+        const candleGeometry = new THREE.CylinderGeometry(0.05, 0.05, 0.8, 8);
+        const candleMaterial = new THREE.MeshStandardMaterial({ color: 0xFF0000 });
+        const candle = new THREE.Mesh(candleGeometry, candleMaterial);
+        candle.position.y = candleY;
+        cakeGroup.add(candle);
 
-        for (let i = 0; i < count; i++) {
-          const candle = document.createElement("div");
-          candle.classList.add("candle");
-          const colorClass = colors[Math.floor(Math.random() * colors.length)];
-          candle.classList.add(colorClass);
+        // Flame (Point Light + small geometry)
+        const flameLight = new THREE.PointLight(0xFFA500, 50, 2);
+        flameLight.position.set(0, candleY + 0.4, 0);
+        
+        const flameGeometry = new THREE.SphereGeometry(0.04, 16, 8);
+        const flameMaterial = new THREE.MeshBasicMaterial({ color: 0xFFFF00, transparent: true, opacity: 0.9 });
+        const flame = new THREE.Mesh(flameGeometry, flameMaterial);
+        flame.position.copy(flameLight.position);
 
-          const row = Math.floor(i / candlesPerRow);
-          const col = i % candlesPerRow;
-          const totalCandlesInRow = Math.min(
-            candlesPerRow,
-            count - row * candlesPerRow
-          );
-          const rowSpacing = availableWidth / (totalCandlesInRow + 1);
+        cakeGroup.add(flameLight);
+        cakeGroup.add(flame);
+        flames.push({ light: flameLight, mesh: flame, active: true });
+        scene.add(cakeGroup);
 
-          const leftBase = rowSpacing * (col + 1) - CANDLE_VISUAL_WIDTH / 2 + 5;
-          const rowShift = row % 2 === 0 ? 0 : shiftAmount;
-
-          candle.style.position = "absolute";
-          candle.style.top = `${10 + row * 3}px`;
-          candle.style.left = `${leftBase - rowShift + 4}px`;
-
-          cake.appendChild(candle);
+        // --- ANIMATION LOOP ---
+        function animate() {
+            requestAnimationFrame(animate);
+            // Simple rotation to show it's 3D
+            cakeGroup.rotation.y += 0.005;
+            renderer.render(scene, camera);
         }
-      }
+        animate();
+        
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+        
+        // --- AUDIO / MICROPHONE LOGIC ---
+        const audioUpload = document.getElementById('audioUpload');
+        const audioStatus = document.getElementById('audio-status');
+        const birthdayMessageAudio = document.getElementById('birthdayMessageAudio');
+        const backgroundMusic = document.getElementById('backgroundMusic');
+        const micStatus = document.getElementById('mic-status');
+        const startButton = document.getElementById('startButton');
+        const blowStatus = document.getElementById('blow-status');
 
-      createCandles(candleCount);
+        let audioContext;
+        let analyser;
+        const BLOW_THRESHOLD = 150; // Threshold for blow detection (Adjust based on mic sensitivity)
+        let isBlowing = false;
+        let allCandlesOut = false;
 
-      // === Microphone / Blow Detection ===
-      async function startMicDetection() {
-        try {
-          const stream = await navigator.mediaDevices.getUserMedia({
-            audio: true,
-          });
-          const audioContext = new (window.AudioContext ||
-            window.webkitAudioContext)();
-          const source = audioContext.createMediaStreamSource(stream);
-          const analyser = audioContext.createAnalyser();
-          analyser.fftSize = 512;
-
-          source.connect(analyser);
-
-          const dataArray = new Uint8Array(analyser.frequencyBinCount);
-
-          let blown = false;
-
-          function detectBlow() {
-            analyser.getByteFrequencyData(dataArray);
-
-            let highFreqSum = 0;
-            let lowFreqSum = 0;
-
-            const midpoint = dataArray.length / 2;
-
-            for (let i = 0; i < dataArray.length; i++) {
-              if (i < midpoint) {
-                lowFreqSum += dataArray[i];
-              } else {
-                highFreqSum += dataArray[i];
-              }
+        // File upload handling
+        audioUpload.addEventListener('change', (event) => {
+            const file = event.target.files[0];
+            if (file) {
+                const fileURL = URL.createObjectURL(file);
+                birthdayMessageAudio.src = fileURL;
+                audioStatus.textContent = `Audio ready: ${file.name}`;
+            } else {
+                audioStatus.textContent = 'No audio uploaded.';
             }
-
-            const highAvg = highFreqSum / (dataArray.length / 2);
-            const lowAvg = lowFreqSum / (dataArray.length / 2);
-
-            const ratio = highAvg / (lowAvg + 1);
-
-            const BLOW_RATIO_THRESHOLD = 0.5;
-
-            if (ratio > BLOW_RATIO_THRESHOLD && !blown) {
-              blown = true;
-              blowOutCandles();
-            }
-
-            requestAnimationFrame(detectBlow);
-          }
-
-          detectBlow();
-        } catch (err) {
-          console.error("Mic access error:", err);
-        }
-      }
-
-      function blowOutCandles() {
-        const candles = document.querySelectorAll(".candle");
-        candles.forEach((candle) => {
-          const delay = Math.random() * 1000;
-          setTimeout(() => {
-            colors.forEach((color) => {
-              if (candle.classList.contains(color)) {
-                candle.classList.add("blown");
-              }
-            });
-          }, delay);
         });
 
-        // Update subTitle after short delay
-        setTimeout(() => {
-          const subTitle = document.getElementById("subTitle");
-          subTitle.textContent = `Yayy! Wishing you the happiest birthday ever!! 🎉`;
-        }, 1200);
-      }
+        // Main function to detect blow
+        function detectBlow() {
+            if (allCandlesOut || !analyser) return;
 
-      startMicDetection();
+            requestAnimationFrame(detectBlow);
+
+            const volumeData = new Uint8Array(analyser.frequencyBinCount);
+            analyser.getByteFrequencyData(volumeData);
+            let sum = 0;
+            for (let i = 0; i < volumeData.length; i++) {
+                sum += volumeData[i];
+            }
+            const averageVolume = sum / volumeData.length;
+
+            if (averageVolume > BLOW_THRESHOLD && !isBlowing) {
+                isBlowing = true;
+                blowStatus.style.display = 'block';
+                blowStatus.textContent = 'BLOW DETECTED!';
+                
+                extinguishCandle();
+                
+                setTimeout(() => { 
+                    isBlowing = false; 
+                    blowStatus.textContent = 'BLOW NOW!';
+                    if (!allCandlesOut) {
+                         // Hide status if not done
+                         blowStatus.style.display = 'none'; 
+                    }
+                }, 1000); 
+            }
+        }
+
+        // Extinguish logic
+        function extinguishCandle() {
+            const activeFlame = flames.find(f => f.active);
+
+            if (activeFlame) {
+                // Extinguish the flame in 3D
+                activeFlame.light.intensity = 0; // Turn off light
+                activeFlame.mesh.visible = false;  // Hide mesh
+                activeFlame.active = false;
+                
+                // Since we only made one candle, we check immediately
+                allCandlesOut = true; 
+                blowStatus.style.display = 'block';
+                blowStatus.textContent = 'WISH GRANTED!';
+                
+                // Play recorded message
+                backgroundMusic.pause();
+                if (birthdayMessageAudio.src) {
+                    birthdayMessageAudio.play();
+                }
+            }
+        }
+        
+        // Start button handler
+        startButton.addEventListener('click', async () => {
+             // 1. Request microphone access
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                analyser = audioContext.createAnalyser();
+                const microphone = audioContext.createMediaStreamSource(stream);
+                microphone.connect(analyser);
+
+                micStatus.textContent = "Microphone ON. READY!";
+                startButton.style.display = 'none';
+                blowStatus.style.display = 'block';
+                backgroundMusic.play().catch(e => console.log("Background music blocked by browser."));
+                detectBlow(); // Start the blow detection loop
+            } catch (err) {
+                micStatus.textContent = "Mic access denied. Cannot blow out candles.";
+                console.error("Error accessing microphone:", err);
+            }
+        });
     </script>
-  </body>
+</body>
 </html>
