@@ -1,448 +1,188 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Happy Birthday — monohorin 🎂</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Happy Birthday Monohorin 🎂</title>
 <style>
-  :root{
-    --bg:#0f1222;
-    --card:#0f1724;
-    --cake-cream:#f6d7c3;
-    --cake-layer:#f3a26a;
-    --frost:#ffd6b6;
-    --cherry:#c33;
-    --candle:#ffec8a;
-    --accent:#ffd166;
-    --text:#fff;
-  }
-  html,body{height:100%;margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial; background: radial-gradient(1200px 600px at 10% 10%, #16304a 0%, var(--bg) 30%, #06060a 100%); color:var(--text); display:flex; align-items:center; justify-content:center;}
-  .wrap{width:920px; max-width:95vw; padding:28px; box-sizing:border-box; text-align:center;}
-  .card{background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.06)); border-radius:18px; padding:28px; box-shadow: 0 10px 30px rgba(2,8,23,0.6);}
-
-  h1{font-family:"Brush Script MT", "Pacifico", cursive; font-size:40px; margin:4px 0 14px; letter-spacing:0.6px; color: #fff; text-shadow: 0 6px 18px rgba(255,182,78,0.12), 0 2px 6px rgba(0,0,0,0.6);}
-  .subtitle{font-size:13px; opacity:0.8; margin-bottom:18px;}
-
-  .stage{display:flex; gap:30px; align-items:flex-start; justify-content:center; flex-wrap:wrap;}
-  /* cake area */
-  .cake-area{position:relative; width:520px; max-width:88vw; display:flex; align-items:center; justify-content:center; flex-direction:column; padding:18px;}
-  /* cake scale - slightly bigger than typical */
-  .cake{width:420px; transform-origin:center; transform: scale(1.05);}
-
-  /* cake layers */
-  .layer{border-radius:28px; position:relative; box-shadow: 0 8px 18px rgba(8,20,30,0.6); margin-bottom:-18px; display:block;}
-  .layer.top{height:120px; background: linear-gradient(180deg,var(--frost), var(--cake-cream)); z-index:5; width:100%;}
-  .layer.mid{height:70px; background: linear-gradient(180deg,var(--cake-layer), #e98b54); z-index:4; width:92%;}
-  .layer.bottom{height:72px; background: linear-gradient(180deg,#d46e3d, #c65937); z-index:3; width:84%;}
-
-  .plate{width:100%; height:22px; background: linear-gradient(180deg,#fff2,#0000); border-radius:40px; margin-top:10px; z-index:1; opacity:0.9; box-shadow:0 12px 28px rgba(0,0,0,0.5);}
-
-  /* icing drips on top layer */
-  .drips{position:absolute; top:18px; left:50%; transform:translateX(-50%); width:86%; height:70px; pointer-events:none; z-index:6;}
-  .drip{position:absolute; bottom:0; width:30px; background:var(--frost); border-radius:20px 20px 30px 30px; box-shadow: inset 0 -6px 8px rgba(255,255,255,0.06);}
-
-  .drip.d1{left:8%; height:48px;}
-  .drip.d2{left:22%; height:62px; width:36px;}
-  .drip.d3{left:44%; height:52px;}
-  .drip.d4{left:68%; height:60px; width:34px;}
-  .drip.d5{left:84%; height:42px;}
-
-  /* cherries & decor */
-  .cherries{position:absolute; top:22px; left:50%; transform:translateX(-50%); z-index:7; display:flex; gap:12px;}
-  .cherry{width:22px;height:22px;border-radius:50%; background:var(--cherry); box-shadow: 0 6px 12px rgba(0,0,0,0.4); border:3px solid #fff;}
-
-  /* candles container */
-  .candles{position:absolute; top:-12px; left:50%; transform:translateX(-50%); z-index:10; display:flex; gap:12px; align-items:flex-end;}
-  .candle{
-    width:48px; height:70px; background:linear-gradient(180deg,var(--candle), #f4d96b); border-radius:8px; display:flex; align-items:center; justify-content:center; position:relative; box-shadow: 0 6px 18px rgba(0,0,0,0.45);
-  }
-  .candle .num{font-weight:700; font-size:20px; color:#6b2e00; text-shadow:0 1px 0 #fff7; }
-  .flame{position:absolute; top:-22px; left:50%; transform:translateX(-50%); width:18px; height:28px; border-radius:50% 50% 45% 45%; background: radial-gradient(circle at 40% 30%, #fff 0%, #ffeb80 8%, #ffb33a 40%, #ff8020 70%); filter:drop-shadow(0 6px 8px rgba(255,120,30,0.18)); animation: flicker 700ms infinite alternate;}
-  @keyframes flicker{
-    0%{transform:translateX(-50%) translateY(0) scale(1);}
-    50%{transform:translateX(-50%) translateY(-2px) scale(0.98);}
-    100%{transform:translateX(-50%) translateY(0) scale(1.02);}
+  body {
+    margin: 0;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    font-family: "Comic Sans MS", cursive;
+    background: linear-gradient(to right, #ffecd2, #fcb69f);
+    overflow: hidden;
   }
 
-  /* extinguished state */
-  .candle.extinguished .flame{opacity:0; transform:translateX(-50%) scale(0.2); transition: all 650ms ease-out;}
-  .candle.extinguished .smoke{display:block;}
-
-  /* smoke effect (small circles) */
-  .smoke{display:none; position:absolute; top:-12px; left:50%; transform:translateX(-50%); width:8px; height:8px; border-radius:50%; background:rgba(200,200,200,0.18); animation: rise 1600ms linear forwards;}
-  @keyframes rise{
-    0%{opacity:1; transform: translate(-50%, 0) scale(0.8);}
-    40%{opacity:0.9; transform: translate(-60%, -16px) scale(1.1);}
-    100%{opacity:0; transform: translate(-100%, -70px) scale(1.9);}
+  h1 {
+    color: #fff;
+    font-size: 3em;
+    text-shadow: 2px 2px 8px rgba(0,0,0,0.5);
+    margin-bottom: 30px;
   }
 
-  /* controls */
-  .controls{display:flex; gap:12px; align-items:center; justify-content:center; flex-wrap:wrap; margin-top:18px;}
-  .btn{background:linear-gradient(180deg,#ffd166,#ffb84d); border:none; padding:10px 14px; border-radius:10px; cursor:pointer; font-weight:600; box-shadow:0 8px 20px rgba(255,166,66,0.12); color:#3b2300;}
-  .btn.secondary{background:linear-gradient(180deg,#ddd,#cfcfcf); color:#333; box-shadow:none;}
-  .file{display:inline-block; padding:8px 10px; border-radius:10px; background: rgba(255,255,255,0.03); border:1px dashed rgba(255,255,255,0.04); font-size:13px; color: #ddd;}
-
-  .small{font-size:13px; opacity:0.9;}
-  .note{font-size:13px; opacity:0.75; margin-top:10px;}
-
-  /* layout right column */
-  .side{width:320px; max-width:42vw; padding:8px 12px; text-align:left;}
-  .upload-row{display:flex; gap:8px; align-items:center; margin:8px 0; flex-wrap:wrap;}
-  input[type="file"]{display:none;}
-  label.filepicker{cursor:pointer; padding:8px 10px; background:rgba(255,255,255,0.03); border-radius:8px; border:1px solid rgba(255,255,255,0.04); font-size:13px;}
-
-  .meter{height:6px; background:rgba(255,255,255,0.06); border-radius:6px; overflow:hidden;}
-  .meter > i{display:block; height:100%; width:0%; background:linear-gradient(90deg,#ffd166,#ff7b7b); transition:width 300ms ease;}
-
-  footer{margin-top:18px; font-size:12px; opacity:0.7;}
-  /* responsive */
-  @media (max-width:900px){
-    .stage{flex-direction:column-reverse;}
-    .side{max-width:95vw;}
+  .cake-container {
+    position: relative;
+    width: 250px;
   }
+
+  /* Cake base */
+  .cake {
+    position: relative;
+    width: 250px;
+    height: 150px;
+    background: linear-gradient(to bottom, #ff6f91, #ff3d6f);
+    border-radius: 0 0 40px 40px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+  }
+
+  /* Icing */
+  .icing {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    height: 50px;
+    background: linear-gradient(to bottom, #fff0f5, #ffdee8);
+    border-radius: 50% 50% 0 0;
+    box-shadow: inset 0 -5px 15px rgba(255,255,255,0.5);
+  }
+
+  /* Candle */
+  .candle {
+    position: absolute;
+    top: -70px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 20px;
+    height: 70px;
+    background: repeating-linear-gradient(
+      45deg,
+      #ffdc73,
+      #ffdc73 5px,
+      #ff9f7f 5px,
+      #ff9f7f 10px
+    );
+    border-radius: 5px;
+  }
+
+  /* Flame */
+  .flame {
+    position: absolute;
+    top: -25px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 20px;
+    height: 25px;
+    background: radial-gradient(circle at 50% 50%, #ffeb3b, #ff9800);
+    border-radius: 50%;
+    filter: drop-shadow(0 0 5px #ffeb3b);
+    animation: flicker 0.2s infinite;
+  }
+
+  @keyframes flicker {
+    0%, 100% { transform: translateX(-50%) scale(1); }
+    50% { transform: translateX(-50%) scale(1.2) translateY(-3px); }
+  }
+
+  /* Age number */
+  .number {
+    position: absolute;
+    top: -100px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: #fff;
+    font-size: 2em;
+    text-shadow: 1px 1px 4px rgba(0,0,0,0.6);
+  }
+
+  /* Button */
+  button {
+    margin-top: 30px;
+    background: #ff6699;
+    color: #fff;
+    border: none;
+    padding: 12px 28px;
+    font-size: 1.1em;
+    border-radius: 30px;
+    cursor: pointer;
+    transition: 0.3s;
+  }
+
+  button:hover {
+    background: #ff3366;
+  }
+
+  /* Confetti */
+  .confetti {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    background-color: red;
+    opacity: 0;
+    pointer-events: none;
+  }
+
 </style>
 </head>
 <body>
-  <div class="wrap">
-    <div class="card">
-      <h1>Happy Birthday monohorin</h1>
-      <div class="subtitle">Make it personal — blow the candles and play your voice message!</div>
+<h1>Happy Birthday Monohorin 🎉</h1>
 
-      <div class="stage">
-        <div class="cake-area">
-          <!-- Cake -->
-          <div class="cake" id="cakeRoot" aria-hidden="true">
-            <div class="layer top" style="width:100%;"></div>
-            <div class="drips" aria-hidden="true">
-              <div class="drip d1"></div>
-              <div class="drip d2"></div>
-              <div class="drip d3"></div>
-              <div class="drip d4"></div>
-              <div class="drip d5"></div>
-            </div>
-
-            <!-- candle container (centered) -->
-            <div class="candles" id="candles">
-              <div class="candle" id="mainCandle" title="Click to blow">
-                <div class="flame" id="flame"></div>
-                <div class="smoke" id="smoke"></div>
-                <div class="num" id="candleNumber">31</div>
-              </div>
-            </div>
-
-            <div class="layer mid"></div>
-            <div class="cherries" aria-hidden="true">
-              <div class="cherry"></div>
-              <div class="cherry"></div>
-              <div class="cherry"></div>
-            </div>
-            <div class="layer bottom"></div>
-            <div class="plate"></div>
-          </div>
-
-          <div class="controls">
-            <button class="btn" id="blowBtn" title="Blow the candle">Blow Candle</button>
-            <button class="btn secondary" id="resetBtn">Reset</button>
-            <button class="btn secondary" id="playAllBtn">Play Preview</button>
-          </div>
-
-          <div class="note small">Tip: Click the candle or press the <strong>Blow Candle</strong> button. After blow, your voice message will play automatically.</div>
-        </div>
-
-        <div class="side">
-          <div style="font-weight:700; margin-bottom:8px;">Audio settings</div>
-
-          <div style="margin-bottom:8px;">Background music (optional)</div>
-          <div class="upload-row">
-            <label class="filepicker file" for="bgFile">Choose background music</label>
-            <input id="bgFile" type="file" accept="audio/*">
-            <span id="bgName" class="small" style="margin-left:6px;opacity:0.7;">(optional)</span>
-          </div>
-
-          <div style="margin-top:10px;">Voice message (played after blow)</div>
-          <div class="upload-row">
-            <label class="filepicker file" for="voiceFile">Upload voice file</label>
-            <input id="voiceFile" type="file" accept="audio/*">
-            <span id="voiceName" class="small" style="margin-left:6px;opacity:0.7;">(or record below)</span>
-          </div>
-
-          <div style="margin-top:6px; display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
-            <button class="btn" id="recordBtn">Start Recording</button>
-            <button class="btn secondary" id="stopRecordBtn" disabled>Stop</button>
-            <div id="recIndicator" class="small" style="opacity:0.7;">No recording</div>
-          </div>
-
-          <div style="margin-top:12px;">
-            <div class="small">Candle number</div>
-            <input id="candleNumInput" type="number" min="0" max="120" value="31" style="width:80px; padding:8px; border-radius:8px; border:1px solid rgba(255,255,255,0.04); margin-top:6px;">
-            <div class="note small">Change this number and press Enter or click outside to update.</div>
-          </div>
-
-          <div style="margin-top:14px;">
-            <div class="small">Volume controls</div>
-            <div style="margin-top:6px;">
-              <label class="small">Background music</label>
-              <input id="bgVol" type="range" min="0" max="1" value="0.4" step="0.01" style="width:100%;">
-              <label class="small">Voice message</label>
-              <input id="voiceVol" type="range" min="0" max="1" value="1" step="0.01" style="width:100%;">
-            </div>
-          </div>
-
-          <div style="margin-top:14px;">
-            <div class="small">Download / Deploy</div>
-            <div class="note small">Save <strong>index.html</strong> to your GitHub Pages repo (or any static host). No build step required.</div>
-          </div>
-        </div>
-      </div>
-
-      <footer>Made for a warm birthday — edit audio and share the page link.</footer>
+<div class="cake-container">
+  <div class="cake">
+    <div class="icing"></div>
+    <div class="candle" id="candle">
+      <div class="flame" id="flame"></div>
+      <div class="number" id="number">31</div>
     </div>
   </div>
+</div>
+
+<button onclick="blowCandle()">Blow Candle 🎂</button>
+
+<audio id="bgMusic" src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_2b758f84cb.mp3?filename=happy-birthday-piano-122153.mp3" autoplay loop></audio>
+<audio id="voiceMsg" src="https://cdn.pixabay.com/download/audio/2021/08/04/audio_b3f3d8b1fd.mp3?filename=soft-wish-11017.mp3"></audio>
 
 <script>
-/*
-  Behavior:
-  - Candle flame visible on load
-  - Clicking candle or Blow button extinguishes it (adds .extinguished) -> smoke animation plays
-  - After extinguish: background music fades a bit and voice message (uploaded or recorded) plays
-  - You can upload background music and voice file via inputs
-  - Simple in-browser recording supported (MediaRecorder) — saves as blob and plays after blow
-*/
+function blowCandle() {
+  const flame = document.getElementById('flame');
+  flame.style.display = 'none';
+  const btn = document.querySelector('button');
+  btn.textContent = '🎉 Candle Blown! 🎉';
+  btn.disabled = true;
 
-const candle = document.getElementById('mainCandle');
-const flame = document.getElementById('flame');
-const smoke = document.getElementById('smoke');
-const blowBtn = document.getElementById('blowBtn');
-const resetBtn = document.getElementById('resetBtn');
-const playAllBtn = document.getElementById('playAllBtn');
-const bgFile = document.getElementById('bgFile');
-const bgName = document.getElementById('bgName');
-const voiceFile = document.getElementById('voiceFile');
-const voiceName = document.getElementById('voiceName');
-const candleNumInput = document.getElementById('candleNumInput');
-const candleNumber = document.getElementById('candleNumber');
-const bgVol = document.getElementById('bgVol');
-const voiceVol = document.getElementById('voiceVol');
-
-let bgAudio = new Audio();
-bgAudio.loop = true;
-bgAudio.volume = parseFloat(bgVol.value);
-
-let voiceAudio = new Audio();
-voiceAudio.volume = parseFloat(voiceVol.value);
-
-bgVol.addEventListener('input', ()=> bgAudio.volume = parseFloat(bgVol.value));
-voiceVol.addEventListener('input', ()=> voiceAudio.volume = parseFloat(voiceVol.value));
-
-// handle file uploads
-bgFile.addEventListener('change', e=>{
-  const f = e.target.files[0];
-  if(!f) { bgName.textContent = '(optional)'; return; }
-  bgName.textContent = f.name;
-  const url = URL.createObjectURL(f);
-  bgAudio.src = url;
-  // auto-play background music (try)
-  bgAudio.play().catch(()=>{/* user gesture required sometimes */});
-});
-voiceFile.addEventListener('change', e=>{
-  const f = e.target.files[0];
-  if(!f) { voiceName.textContent = '(or record below)'; return; }
-  voiceName.textContent = f.name;
-  const url = URL.createObjectURL(f);
-  voiceAudio.src = url;
-});
-
-// update candle number
-candleNumInput.addEventListener('change', ()=>{
-  const v = candleNumInput.value || '0';
-  candleNumber.textContent = v;
-});
-candleNumInput.addEventListener('keyup', (e)=>{
-  if(e.key === 'Enter') candleNumInput.blur();
-});
-
-// blow logic
-let extinguished = false;
-function doBlow(){
-  if(extinguished) return;
-  extinguished = true;
-  candle.classList.add('extinguished');
-  // show smoke by creating multiple small smoke elements (or animate existing)
-  showSmokeSequence();
-  // subtle bg music fade
-  fadeAudio(bgAudio, 1, 0.25, 800);
-  // play voice after short delay to simulate immediacy
-  setTimeout(()=> {
-    if(voiceAudio.src){
-      voiceAudio.currentTime = 0;
-      voiceAudio.play().catch(()=>{ /* user gesture required */ });
-    } else {
-      // no voice; optionally beep
-      // simple fallback beep using WebAudio
-      playBeep();
-    }
-  }, 650);
-}
-candle.addEventListener('click', doBlow);
-blowBtn.addEventListener('click', doBlow);
-
-// reset
-resetBtn.addEventListener('click', ()=>{
-  extinguished = false;
-  candle.classList.remove('extinguished');
-  // restore bg volume
-  fadeAudio(bgAudio, bgAudio.volume, parseFloat(bgVol.value), 400);
-  // stop voice if playing
-  voiceAudio.pause();
-  voiceAudio.currentTime = 0;
-});
-
-// play preview (plays bg + voice)
-playAllBtn.addEventListener('click', async ()=>{
-  // start bg then play voice after short lead
-  if(bgAudio.src){
-    try{ await bgAudio.play(); }catch(e){}
-  }
-  if(voiceAudio.src){
-    setTimeout(()=> {
-      voiceAudio.currentTime = 0;
-      voiceAudio.play().catch(()=>{});
-    }, 600);
-  }
-});
-
-function showSmokeSequence(){
-  // create multiple small smoke blobs for better effect
-  for(let i=0;i<5;i++){
-    const s = document.createElement('div');
-    s.style.position = 'absolute';
-    s.style.left = (50 + (Math.random()-0.5)*32) + '%';
-    s.style.top = '-10px';
-    s.style.width = (8 + Math.random()*10) + 'px';
-    s.style.height = s.style.width;
-    s.style.borderRadius = '50%';
-    s.style.background = 'rgba(200,200,200,' + (0.12+Math.random()*0.2) + ')';
-    s.style.transform = 'translateX(-50%)';
-    s.style.pointerEvents='none';
-    s.style.animation = 'rise 1600ms linear forwards';
-    candle.appendChild(s);
-    // cleanup
-    setTimeout(()=> s.remove(), 1800);
-  }
+  const voiceMsg = document.getElementById('voiceMsg');
+  setTimeout(() => {
+    voiceMsg.play();
+    launchConfetti();
+  }, 500);
 }
 
-// tiny beep fallback (WebAudio)
-function playBeep(){
-  try{
-    const ctx = new (window.AudioContext || window.webkitAudioContext)();
-    const o = ctx.createOscillator();
-    const g = ctx.createGain();
-    o.type = 'sine'; o.frequency.value = 880;
-    g.gain.value = 0.0001;
-    o.connect(g); g.connect(ctx.destination);
-    const now = ctx.currentTime;
-    g.gain.linearRampToValueAtTime(0.15, now + 0.01);
-    o.start(now);
-    g.gain.exponentialRampToValueAtTime(0.0001, now + 0.6);
-    o.stop(now + 0.7);
-  }catch(e){}
+// Confetti function
+function launchConfetti() {
+  for (let i = 0; i < 100; i++) {
+    const confetti = document.createElement('div');
+    confetti.classList.add('confetti');
+    confetti.style.backgroundColor = `hsl(${Math.random()*360}, 100%, 50%)`;
+    confetti.style.left = Math.random()*window.innerWidth + 'px';
+    confetti.style.top = '-10px';
+    document.body.appendChild(confetti);
+    
+    confetti.style.opacity = 1;
+    const fall = confetti.animate([
+      { transform: `translateY(0px) rotate(0deg)` },
+      { transform: `translateY(${window.innerHeight + 50}px) rotate(${Math.random()*720}deg)` }
+    ], {
+      duration: 3000 + Math.random()*2000,
+      iterations: 1,
+      easing: 'ease-out'
+    });
+    
+    fall.onfinish = () => confetti.remove();
+  }
 }
-
-// simple fade function
-function fadeAudio(audioEl, from, to, ms=600){
-  const start = performance.now();
-  function step(now){
-    const p = Math.min(1, (now - start)/ms);
-    audioEl.volume = from + (to - from) * p;
-    if(p < 1) requestAnimationFrame(step);
-  }
-  requestAnimationFrame(step);
-}
-
-/* In-browser recording (MediaRecorder) */
-let recorder = null;
-let recordedChunks = [];
-const recordBtn = document.getElementById('recordBtn');
-const stopRecordBtn = document.getElementById('stopRecordBtn');
-const recIndicator = document.getElementById('recIndicator');
-
-recordBtn.addEventListener('click', async ()=>{
-  if(recorder && recorder.state === 'recording') return;
-  if(!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia){
-    alert('Recording not supported in this browser.');
-    return;
-  }
-  try{
-    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-    recorder = new MediaRecorder(stream);
-    recordedChunks = [];
-    recorder.ondataavailable = e => {
-      if(e.data.size > 0) recordedChunks.push(e.data);
-    };
-    recorder.onstop = () => {
-      const blob = new Blob(recordedChunks, { type: 'audio/webm' });
-      const url = URL.createObjectURL(blob);
-      voiceAudio.src = url;
-      voiceName.textContent = 'Recorded message';
-      recIndicator.textContent = 'Recorded';
-      stopRecordBtn.disabled = true;
-      recordBtn.disabled = false;
-      // stop all tracks
-      stream.getTracks().forEach(t=>t.stop());
-    };
-    recorder.start();
-    recIndicator.textContent = 'Recording...';
-    recordBtn.disabled = true;
-    stopRecordBtn.disabled = false;
-  }catch(err){
-    console.error(err);
-    alert('Could not start recording. Please allow microphone access.');
-  }
-});
-
-stopRecordBtn.addEventListener('click', ()=>{
-  if(recorder && recorder.state === 'recording') recorder.stop();
-  recIndicator.textContent = 'Processing...';
-});
-
-/* simple inline accessibility: press space/enter on blow button with keyboard */
-document.addEventListener('keydown', (e)=>{
-  if(e.key === ' ' || e.key === 'Spacebar' || e.key === 'Enter'){
-    // avoid accidental multiple triggers
-    if(document.activeElement.tagName.toLowerCase() === 'input') return;
-    doBlow();
-  }
-});
-
-/* small: make number editable by click too */
-candleNumber.addEventListener('click', ()=>{
-  const current = candleNumber.textContent;
-  const newVal = prompt('Set candle number:', current);
-  if(newVal !== null) {
-    candleNumber.textContent = newVal;
-    candleNumInput.value = newVal;
-  }
-});
-
-// initial: attempt to autoplay bg music if present (browser policies may block)
-window.addEventListener('load', ()=> {
-  // nothing automatic; user can choose to upload/play
-});
-
-/* Helpful: drag&drop support for voice file onto candle area */
-document.addEventListener('dragover', (e)=> e.preventDefault());
-document.addEventListener('drop', (e)=>{
-  e.preventDefault();
-  const f = e.dataTransfer.files[0];
-  if(!f) return;
-  if(f.type.startsWith('audio/')){
-    voiceAudio.src = URL.createObjectURL(f);
-    voiceName.textContent = f.name;
-  }
-});
-
-// small safety: stop audio when navigating away
-window.addEventListener('pagehide', ()=> {
-  bgAudio.pause(); voiceAudio.pause();
-});
 </script>
+</body>
+</html>
