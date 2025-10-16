@@ -1,10 +1,9 @@
-
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title> Monohorin Special 🎂</title>
+    <title>Birthday Cake 🎂</title>
     <link rel="stylesheet" href="style.css" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -37,14 +36,14 @@
     <script>
       // Read URL params
       const params = new URLSearchParams(window.location.search);
-      const name = params.get("name") || "Monohorin";
+      const name = params.get("name") || "Friend";
       let candleCount = parseInt(params.get("candles")) || 4;
       candleCount = Math.min(Math.max(candleCount, 1), 30);
 
       const birthdayText = document.getElementById("birthdayText");
       birthdayText.innerHTML = `
         <div id="mainTitle">Happy Birthday, ${name}!</div>
-        <div id="subTitle">Make a wish and blow candles through your phone microphone .</div>
+        <div id="subTitle">Make a wish and blow candles.</div>
       `;
 
       const cake = document.getElementById("cake");
@@ -161,18 +160,13 @@
         });
 
         // Update subTitle after short delay
-       setTimeout(() => {
-  const subTitle = document.getElementById("subTitle");
-  subTitle.textContent = `Take love Monohorin! 
-I pray for you the happiest, healthiest year ever & forever my love. 
-Stay blessed — even if it takes 105 years, stay with me. 
-Muuuuuuuuuuuuuuuuuuuuuuuuuuuuuuaaaaaaaaaaaah!! 🎉 
-Have a wonderful day, my Ishu!`;
-}, 1200);
+        setTimeout(() => {
+          const subTitle = document.getElementById("subTitle");
+          subTitle.textContent = `Yayy! Wishing you the happiest birthday ever!! 🎉`;
+        }, 1200);
+      }
 
       startMicDetection();
     </script>
   </body>
 </html>
-
-
