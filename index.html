@@ -37,14 +37,14 @@
     <script>
       // Read URL params
       const params = new URLSearchParams(window.location.search);
-      const name = params.get("name") || "Friend";
+      const name = params.get("name") || "Monohorin";
       let candleCount = parseInt(params.get("candles")) || 4;
       candleCount = Math.min(Math.max(candleCount, 1), 30);
 
       const birthdayText = document.getElementById("birthdayText");
       birthdayText.innerHTML = `
         <div id="mainTitle">Happy Birthday, ${name}!</div>
-        <div id="subTitle">Make a wish and blow candles.</div>
+        <div id="subTitle">Make a wish and blow candles through your phone microphone .</div>
       `;
 
       const cake = document.getElementById("cake");
@@ -163,7 +163,9 @@
         // Update subTitle after short delay
         setTimeout(() => {
           const subTitle = document.getElementById("subTitle");
-          subTitle.textContent = `Take loveMonohorin! Wishing you the happiest healthy birthday ever and stay blessed!! 🎉`;
+          subTitle.textContent = `Take love Monohorin! 
+                                  I pray for you the happiest healthy year ever & forever my love and stay blessed even it akes 105 years stay with me
+                                  Muuuuuuuuuuuuuuuuuuuuuuuuuuuuuuaaaaaaaaaaaah!! 🎉 Have aa wounderful Day my ishu';
         }, 1200);
       }
 
@@ -171,3 +173,4 @@
     </script>
   </body>
 </html>
+
