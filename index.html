@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Birthday Cake 🎂</title>
+    <title>Monohorin Special 🎂</title>
     <link rel="stylesheet" href="style.css" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -36,8 +36,8 @@
     <script>
       // Read URL params
       const params = new URLSearchParams(window.location.search);
-      const name = params.get("name") || "Friend";
-      let candleCount = parseInt(params.get("candles")) || 4;
+      const name = params.get("name") || "Monohorin";
+      let candleCount = parseInt(params.get("candles")) || 30;
       candleCount = Math.min(Math.max(candleCount, 1), 30);
 
       const birthdayText = document.getElementById("birthdayText");
@@ -162,7 +162,11 @@
         // Update subTitle after short delay
         setTimeout(() => {
           const subTitle = document.getElementById("subTitle");
-          subTitle.textContent = `Yayy! Wishing you the happiest birthday ever!! 🎉`;
+          subTitle.textContent = `Take love Monohorin! 
+I pray for you the happiest, healthiest year ever & forever my love. 
+Stay blessed — even if it takes 105 years, stay with me. 
+Muuuuuuuuuuuuuuuuuuuuuuuuuuuuuuaaaaaaaaaaaah!! 🎉 
+Have a wonderful day, my Ishu!`;
         }, 1200);
       }
 
